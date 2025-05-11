@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Sql({"/schema.sql", "/data.sql"})
 @Transactional
-public class DatabaseIntegrationTest {
+class DatabaseIntegrationTest {
 
     @Autowired
     private TransferenciaRepository transferenciaRepository;
@@ -58,59 +58,95 @@ public class DatabaseIntegrationTest {
     }
 
     @Test
-    void testDatabaseIntegration_RecuperarTaxaPorDias() {
+    void testRecuperarTaxaMesmoDia() {
         // Act
         List<Taxa> taxasMesmoDia = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(0L, 0L);
-        List<Taxa> taxas5Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(5L, 5L);
-        List<Taxa> taxas15Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(15L, 15L);
-        List<Taxa> taxas25Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(25L, 25L);
-        List<Taxa> taxas35Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(35L, 35L);
-        List<Taxa> taxas45Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(45L, 45L);
-        List<Taxa> taxas51Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(51L, 51L);
 
         // Assert
         assertFalse(taxasMesmoDia.isEmpty());
         Taxa taxaMesmoDia = taxasMesmoDia.get(0);
         assertEquals(0L, taxaMesmoDia.getDiasMinimo());
         assertEquals(0L, taxaMesmoDia.getDiasMaximo());
-        assertNotEquals( new BigDecimal("0.025"),taxaMesmoDia.getPercentual());
+        assertNotEquals(new BigDecimal("0.025"), taxaMesmoDia.getPercentual());
         assertEquals(new BigDecimal("3.00"), taxaMesmoDia.getValorFixo());
+    }
 
+    @Test
+    void testRecuperarTaxa5Dias() {
+        // Act
+        List<Taxa> taxas5Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(5L, 5L);
+
+        // Assert
         assertFalse(taxas5Dias.isEmpty());
         Taxa taxa5Dias = taxas5Dias.get(0);
         assertEquals(1L, taxa5Dias.getDiasMinimo());
         assertEquals(10L, taxa5Dias.getDiasMaximo());
-        assertNull(taxa5Dias.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa5Dias.getPercentual());
         assertEquals(0, new BigDecimal("12.00").compareTo(taxa5Dias.getValorFixo()));
+    }
 
+    @Test
+    void testRecuperarTaxa15Dias() {
+        // Act
+        List<Taxa> taxas15Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(15L, 15L);
+
+        // Assert
         assertFalse(taxas15Dias.isEmpty());
         Taxa taxa15Dias = taxas15Dias.get(0);
         assertEquals(11L, taxa15Dias.getDiasMinimo());
         assertEquals(20L, taxa15Dias.getDiasMaximo());
-        assertEquals(new BigDecimal("0.08"),taxa15Dias.getPercentual());
-        assertNull(taxa15Dias.getValorFixo());
+        assertEquals(new BigDecimal("0.08"), taxa15Dias.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa15Dias.getValorFixo());
+    }
 
+    @Test
+    void testRecuperarTaxa25Dias() {
+        // Act
+        List<Taxa> taxas25Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(25L, 25L);
+
+        // Assert
         assertFalse(taxas25Dias.isEmpty());
         Taxa taxa25Dias = taxas25Dias.get(0);
         assertEquals(21L, taxa25Dias.getDiasMinimo());
         assertEquals(30L, taxa25Dias.getDiasMaximo());
-        assertEquals( new BigDecimal("0.07"),taxa25Dias.getPercentual());
-        assertNull(taxa25Dias.getValorFixo());
+        assertEquals(new BigDecimal("0.07"), taxa25Dias.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa25Dias.getValorFixo());
+    }
 
+    @Test
+    void testRecuperarTaxa35Dias() {
+        // Act
+        List<Taxa> taxas35Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(35L, 35L);
+
+        // Assert
         assertFalse(taxas35Dias.isEmpty());
         Taxa taxa35Dias = taxas35Dias.get(0);
         assertEquals(31L, taxa35Dias.getDiasMinimo());
         assertEquals(40L, taxa35Dias.getDiasMaximo());
-        assertEquals(new BigDecimal("0.05"),taxa35Dias.getPercentual());
-        assertNull(taxa35Dias.getValorFixo());
+        assertEquals(new BigDecimal("0.05"), taxa35Dias.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa35Dias.getValorFixo());
+    }
 
+    @Test
+    void testRecuperarTaxa45Dias() {
+        // Act
+        List<Taxa> taxas45Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(45L, 45L);
+
+        // Assert
         assertFalse(taxas45Dias.isEmpty());
         Taxa taxa45Dias = taxas45Dias.get(0);
         assertEquals(41L, taxa45Dias.getDiasMinimo());
         assertEquals(50L, taxa45Dias.getDiasMaximo());
-        assertEquals( new BigDecimal("0.02"),taxa45Dias.getPercentual());
-        assertNull(taxa45Dias.getValorFixo());
+        assertEquals(new BigDecimal("0.02"), taxa45Dias.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa45Dias.getValorFixo());
+    }
 
+    @Test
+    void testRecuperarTaxa51Dias() {
+        // Act
+        List<Taxa> taxas51Dias = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(51L, 51L);
+
+        // Assert
         assertTrue(taxas51Dias.isEmpty());
     }
 

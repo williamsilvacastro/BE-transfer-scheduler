@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Sql({"/schema.sql"})
-public class TransferenciaRepositoryTest {
+class TransferenciaRepositoryTest {
 
     @Autowired
     private TransferenciaRepository transferenciaRepository;

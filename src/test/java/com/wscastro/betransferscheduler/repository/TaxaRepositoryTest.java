@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Sql({"/schema.sql", "/data.sql"})
-public class TaxaRepositoryTest {
+class TaxaRepositoryTest {
 
     @Autowired
     private TaxaRepository taxaRepository;
@@ -42,7 +42,7 @@ public class TaxaRepositoryTest {
         Taxa taxa = taxas.get(0);
         assertEquals(1L, taxa.getDiasMinimo());
         assertEquals(10L, taxa.getDiasMaximo());
-        assertNull(taxa.getPercentual());
+        assertEquals(new BigDecimal("0.00"), taxa.getPercentual());
         assertEquals(0, new BigDecimal("12.00").compareTo(taxa.getValorFixo()));
     }
 
@@ -57,7 +57,7 @@ public class TaxaRepositoryTest {
         assertEquals(11L, taxa.getDiasMinimo());
         assertEquals(20L, taxa.getDiasMaximo());
         assertEquals(new BigDecimal("0.08"),taxa.getPercentual());
-        assertNull(taxa.getValorFixo());
+        assertEquals(new BigDecimal("0.00"), taxa.getValorFixo());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class TaxaRepositoryTest {
         assertEquals(21L, taxa.getDiasMinimo());
         assertEquals(30L, taxa.getDiasMaximo());
         assertEquals(new BigDecimal("0.07"),taxa.getPercentual());
-        assertNull(taxa.getValorFixo());
+        assertEquals(new BigDecimal("0.00"), taxa.getValorFixo());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class TaxaRepositoryTest {
         assertEquals(31L, taxa.getDiasMinimo());
         assertEquals(40L, taxa.getDiasMaximo());
         assertEquals(new BigDecimal("0.05"),taxa.getPercentual());
-        assertNull(taxa.getValorFixo());
+        assertEquals(new BigDecimal("0.00"), taxa.getValorFixo());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class TaxaRepositoryTest {
         assertEquals(41L, taxa.getDiasMinimo());
         assertEquals(50L, taxa.getDiasMaximo());
         assertEquals(new BigDecimal("0.02"),taxa.getPercentual());
-        assertNull(taxa.getValorFixo());
+        assertEquals(new BigDecimal("0.00"), taxa.getValorFixo());
     }
 
     @Test

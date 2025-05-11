@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql({"/schema.sql", "/data.sql"})
-public class TransferenciaIntegrationTest {
+class TransferenciaIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,7 +55,7 @@ public class TransferenciaIntegrationTest {
         requestDTO.setDataTransferencia(hoje.plusDays(5));
 
         // Act & Assert
-        MvcResult result = mockMvc.perform(post("/agendamentos")
+        mockMvc.perform(post("/agendamentos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())

@@ -2,7 +2,7 @@
 
 Sistema de agendamento de transferências financeiras.
 
-## 🔧 Tecnologias e Versões
+## 🔧 Tecnologias e Versces
 
 - **Java:** 11
 - **Spring Boot:** 2.7.18
@@ -29,5 +29,5 @@ Sistema de agendamento de transferências financeiras.
 git clone https://github.com/seu-usuario/transfer-scheduler.git
 cd transfer-scheduler
 
-# Execute a aplicação
+# Execute a aplicacao
 ./mvnw spring-boot:run

@@ -3,6 +3,7 @@ package com.wscastro.betransferscheduler.model;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,9 +22,16 @@ public class Taxa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long diasMinimo;
+
+    @Column(nullable = false)
     private Long diasMaximo;
+
+    @Column(nullable = false)
     private BigDecimal percentual;
+
+    @Column(nullable = false)
     private BigDecimal valorFixo;
 
     @Override

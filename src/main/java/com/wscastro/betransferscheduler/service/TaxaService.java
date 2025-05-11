@@ -34,7 +34,7 @@ public class TaxaService {
 
         List<Taxa> taxas = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(dias, dias);
         if (taxas.isEmpty()) {
-            throw new TaxaInvalidaException("Não existe taxa aplicável para a data informada.");
+            throw new TaxaInvalidaException("Nao existe taxa aplicável para a data informada.");
         }
         Taxa taxa = taxas.get(0);
 
@@ -46,10 +46,10 @@ public class TaxaService {
 
     private void validaDistanciaEntreDatas(long dias) {
         if (dias < 0) {
-            throw new DataEntradaInvalidaException("A data de transferência não pode ser anterior à data de agendamento.");
+            throw new DataEntradaInvalidaException("A data de transferência nao pode ser anterior à data de agendamento.");
         }
         if (dias > diasLimite) {
-            throw new DataEntradaInvalidaException("A distância entre as datas não pode ser superior a " + diasLimite + " dias.");
+            throw new DataEntradaInvalidaException("A distância entre as datas nao pode ser superior a " + diasLimite + " dias.");
         }
     }
 
