@@ -4,6 +4,8 @@ import com.wscastro.betransferscheduler.dto.TransferenciaRequestDTO;
 import com.wscastro.betransferscheduler.dto.TransferenciaResponseDTO;
 import com.wscastro.betransferscheduler.model.Transferencia;
 import com.wscastro.betransferscheduler.repository.TransferenciaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -43,5 +45,10 @@ public class TransferenciaService {
         return repository.findAll().stream()
                 .map(TransferenciaResponseDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public Page<TransferenciaResponseDTO> listarTodas(Pageable pageable) {
+        return repository.findAll(pageable)
+                .map(TransferenciaResponseDTO::new);
     }
 }

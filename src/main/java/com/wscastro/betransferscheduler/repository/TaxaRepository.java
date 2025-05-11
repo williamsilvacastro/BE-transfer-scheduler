@@ -3,8 +3,8 @@ package com.wscastro.betransferscheduler.repository;
 import com.wscastro.betransferscheduler.model.Taxa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface TaxaRepository extends JpaRepository<Taxa, Long> {
-    Optional<Taxa> findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(Long diasMinimo, Long diasMaximo);
+    List<Taxa> findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(Long diasMinimo, Long diasMaximo);
 }

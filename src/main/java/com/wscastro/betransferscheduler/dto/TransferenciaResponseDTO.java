@@ -17,7 +17,8 @@ public class TransferenciaResponseDTO {
     private LocalDate dataAgendamento;
     private LocalDate dataTransferencia;
 
-    // Construtor para mapeamento direto a partir da entidade
+    public TransferenciaResponseDTO() {}
+
     public TransferenciaResponseDTO(Transferencia t) {
         this.id = t.getId();
         this.contaOrigem = t.getContaOrigem();
