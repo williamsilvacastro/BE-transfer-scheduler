@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class TransferenciaRequestDTO {
@@ -25,6 +25,6 @@ public class TransferenciaRequestDTO {
     private BigDecimal valor;
 
     @NotNull(message = "Data de transferência nao pode ser nula")
-    private LocalDate dataTransferencia;
+    private LocalDateTime dataTransferencia;
 
 }

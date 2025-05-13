@@ -4,7 +4,7 @@ import com.wscastro.betransferscheduler.model.Transferencia;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class TransferenciaResponseDTO {
@@ -14,8 +14,8 @@ public class TransferenciaResponseDTO {
     private String contaDestino;
     private BigDecimal valor;
     private BigDecimal taxa;
-    private LocalDate dataAgendamento;
-    private LocalDate dataTransferencia;
+    private LocalDateTime dataAgendamento;
+    private LocalDateTime dataTransferencia;
 
     public TransferenciaResponseDTO() {}
 
@@ -29,4 +29,3 @@ public class TransferenciaResponseDTO {
         this.dataTransferencia = t.getDataTransferencia();
     }
 }
-

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ class TransferenciaRepositoryTest {
     @Test
     void save_DeveSalvarTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");
@@ -51,7 +51,7 @@ class TransferenciaRepositoryTest {
     @Test
     void findById_DeveRetornarTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");
@@ -78,7 +78,7 @@ class TransferenciaRepositoryTest {
     @Test
     void findAll_DeveRetornarTodasTransferencias() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         
         Transferencia transferencia1 = new Transferencia();
         transferencia1.setContaOrigem("1234567890");
@@ -126,7 +126,7 @@ class TransferenciaRepositoryTest {
     @Test
     void findAll_ComPaginacao_DeveRetornarPaginaDeTransferencias() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         
         // Create 5 transferencias
         for (int i = 0; i < 5; i++) {
@@ -167,7 +167,7 @@ class TransferenciaRepositoryTest {
     @Test
     void delete_DeveRemoverTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");

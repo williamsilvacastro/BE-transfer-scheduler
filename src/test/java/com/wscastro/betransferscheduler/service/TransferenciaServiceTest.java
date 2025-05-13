@@ -18,15 +18,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import com.wscastro.betransferscheduler.exception.ContasIguaisException;
+import com.wscastro.betransferscheduler.exception.DataTransferenciaNaoFuturaException;
 
 @ExtendWith(MockitoExtension.class)
 class TransferenciaServiceTest {
@@ -45,11 +46,11 @@ class TransferenciaServiceTest {
 
     private TransferenciaRequestDTO requestDTO;
     private Transferencia transferencia;
-    private LocalDate hoje;
+    private LocalDateTime hoje;
 
     @BeforeEach
     void setUp() {
-        hoje = LocalDate.now();
+        hoje = LocalDateTime.now();
 
         // Setup request DTO
         requestDTO = new TransferenciaRequestDTO();
@@ -81,7 +82,7 @@ class TransferenciaServiceTest {
         // Assert
         verify(taxaService).calcularTaxa(
                 eq(new BigDecimal("100.00")), 
-                any(LocalDate.class), 
+                any(LocalDateTime.class), 
                 eq(hoje.plusDays(5))
         );
 
@@ -99,8 +100,8 @@ class TransferenciaServiceTest {
         assertEquals("0987654321", responseDTO.getContaDestino());
         assertEquals(new BigDecimal("100.00"), responseDTO.getValor());
         assertEquals(new BigDecimal("12.00"), responseDTO.getTaxa());
-        assertEquals(hoje, responseDTO.getDataAgendamento());
-        assertEquals(hoje.plusDays(5), responseDTO.getDataTransferencia());
+        assertHourWithoutMillis(hoje, responseDTO.getDataAgendamento());
+        assertHourWithoutMillis(hoje.plusDays(5), responseDTO.getDataTransferencia());
     }
 
     @Test
@@ -173,5 +174,33 @@ class TransferenciaServiceTest {
         assertEquals("2222222222", result.getContent().get(1).getContaDestino());
         assertEquals(new BigDecimal("200.00"), result.getContent().get(1).getValor());
         assertEquals(new BigDecimal("16.40"), result.getContent().get(1).getTaxa());
+    }
+
+    void assertHourWithoutMillis(LocalDateTime dateTime, LocalDateTime dateTime2) {
+        assertEquals(dateTime.getHour(), dateTime2.getHour());
+        assertEquals(dateTime.getMinute(), dateTime2.getMinute());
+    }
+
+    @Test
+    void agendarTransferencia_ComContasIguais_DeveLancarExcecao() {
+        // Arrange
+        requestDTO.setContaOrigem("1234567890");
+        requestDTO.setContaDestino("1234567890"); // Mesma conta de origem
+
+        // Act & Assert
+        assertThrows(ContasIguaisException.class, () -> {
+            transferenciaService.agendarTransferencia(requestDTO);
+        });
+    }
+
+    @Test
+    void agendarTransferencia_ComDataPassada_DeveLancarExcecao() {
+        // Arrange
+        requestDTO.setDataTransferencia(hoje.minusDays(1)); // Data no passado
+
+        // Act & Assert
+        assertThrows(DataTransferenciaNaoFuturaException.class, () -> {
+            transferenciaService.agendarTransferencia(requestDTO);
+        });
     }
 }

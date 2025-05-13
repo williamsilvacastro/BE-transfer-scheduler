@@ -32,4 +32,10 @@ public class TransferenciaController {
         Page<TransferenciaResponseDTO> agendamentos = transferenciaService.listarTodas(pageable);
         return ResponseEntity.ok(agendamentos);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        transferenciaService.deletarTransferencia(id);
+        return ResponseEntity.noContent().build();
+    }
 }

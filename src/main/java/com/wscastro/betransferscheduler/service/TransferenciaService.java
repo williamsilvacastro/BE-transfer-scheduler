@@ -10,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class TransferenciaService {
         validarContasDiferentes(dto.getContaOrigem(), dto.getContaDestino());
         validarDataFutura(dto.getDataTransferencia());
 
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         BigDecimal taxa = taxaService.calcularTaxa(dto.getValor(), hoje, dto.getDataTransferencia());
 
         Transferencia entity = new Transferencia();
@@ -60,8 +62,8 @@ public class TransferenciaService {
         }
     }
 
-    private void validarDataFutura(LocalDate dataTransferencia) {
-        LocalDate hoje = LocalDate.now();
+    private void validarDataFutura(LocalDateTime dataTransferencia) {
+        LocalDateTime hoje = LocalDateTime.now();
         if (dataTransferencia.isBefore(hoje)) {
             logger.error("Data de transferência está no passado: {}", dataTransferencia);
             throw new DataTransferenciaNaoFuturaException("A data de transferência deve ser igual ou posterior à data atual");
@@ -80,5 +82,15 @@ public class TransferenciaService {
                 pageable.getPageNumber(), pageable.getPageSize());
         return repository.findAll(pageable)
                 .map(TransferenciaResponseDTO::new);
+    }
+
+    public void deletarTransferencia(Long id) {
+        logger.info("Deletando transferência com ID: {}", id);
+        if (!repository.existsById(id)) {
+            logger.error("Transferência não encontrada com ID: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transferência não encontrada");
+        }
+        repository.deleteById(id);
+        logger.info("Transferência deletada com sucesso. ID: {}", id);
     }
 }

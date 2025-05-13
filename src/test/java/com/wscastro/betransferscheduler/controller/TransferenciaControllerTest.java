@@ -21,14 +21,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,19 +49,19 @@ class TransferenciaControllerTest {
     private ObjectMapper objectMapper;
     private TransferenciaRequestDTO requestDTO;
     private TransferenciaResponseDTO responseDTO;
-    private LocalDate hoje;
+    private LocalDateTime hoje;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules(); // For LocalDate serialization
+        objectMapper.findAndRegisterModules(); // For LocalDateTime serialization
 
         mockMvc = MockMvcBuilders.standaloneSetup(transferenciaController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
 
-        hoje = LocalDate.now();
+        hoje = LocalDateTime.now();
 
         // Setup request DTO
         requestDTO = new TransferenciaRequestDTO();
@@ -148,5 +149,31 @@ class TransferenciaControllerTest {
                 .andExpect(jsonPath("$.content[1].id", is(2)))
                 .andExpect(jsonPath("$.content[1].contaOrigem", is("1111111111")))
                 .andExpect(jsonPath("$.content[1].valor", is(200.00)));
+    }
+
+    @Test
+    void deletar_DeveRetornarNoContent() throws Exception {
+        Long id = 1L;
+
+        doNothing().when(transferenciaService).deletarTransferencia(id);
+
+        mockMvc.perform(delete("/agendamentos/{id}", id))
+                .andExpect(status().isNoContent());
+
+        verify(transferenciaService, times(1)).deletarTransferencia(id);
+    }
+
+    @Test
+    void deletar_ComIdInexistente_DeveRetornarNotFound() throws Exception {
+        Long id = 999L;
+
+        doThrow(new org.springframework.web.server.ResponseStatusException(
+                org.springframework.http.HttpStatus.NOT_FOUND, "Transferência não encontrada"))
+                .when(transferenciaService).deletarTransferencia(id);
+
+        mockMvc.perform(delete("/agendamentos/{id}", id))
+                .andExpect(status().isNotFound());
+
+        verify(transferenciaService, times(1)).deletarTransferencia(id);
     }
 }

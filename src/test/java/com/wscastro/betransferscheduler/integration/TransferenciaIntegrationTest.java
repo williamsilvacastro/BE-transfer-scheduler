@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -47,7 +47,7 @@ class TransferenciaIntegrationTest {
     @Test
     void agendarTransferencia_DeveAgendarERetornarTransferencia() throws Exception {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         TransferenciaRequestDTO requestDTO = new TransferenciaRequestDTO();
         requestDTO.setContaOrigem("1234567890");
         requestDTO.setContaDestino("0987654321");
@@ -73,14 +73,14 @@ class TransferenciaIntegrationTest {
         assertEquals("0987654321", transferencia.getContaDestino());
         assertEquals(new BigDecimal("100.00"), transferencia.getValor());
         assertEquals(new BigDecimal("12.00"), transferencia.getTaxa());
-        assertEquals(hoje, transferencia.getDataAgendamento());
-        assertEquals(hoje.plusDays(5), transferencia.getDataTransferencia());
+        assertDateTimeEquals(hoje, transferencia.getDataAgendamento());
+        assertDateTimeEquals(hoje.plusDays(5), transferencia.getDataTransferencia());
     }
 
     @Test
     void agendarTransferencia_ComDataInvalida_DeveRetornarBadRequest() throws Exception {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         TransferenciaRequestDTO requestDTO = new TransferenciaRequestDTO();
         requestDTO.setContaOrigem("1234567890");
         requestDTO.setContaDestino("0987654321");
@@ -105,7 +105,7 @@ class TransferenciaIntegrationTest {
         requestDTO.setContaOrigem("123"); // Formato inválido
         requestDTO.setContaDestino("456"); // Formato inválido
         requestDTO.setValor(new BigDecimal("100.00"));
-        requestDTO.setDataTransferencia(LocalDate.now().plusDays(5));
+        requestDTO.setDataTransferencia(LocalDateTime.now().plusDays(5));
 
         // Act & Assert
         mockMvc.perform(post("/agendamentos")
@@ -130,27 +130,27 @@ class TransferenciaIntegrationTest {
     @Test
     void listarTransferencias_DeveRetornarTransferencias_QuandoExistemTransferencias() throws Exception {
         // Arrange
-        LocalDate hoje = LocalDate.now();
-        
+        LocalDateTime hoje = LocalDateTime.now();
+
         // Create first transferencia
         TransferenciaRequestDTO requestDTO1 = new TransferenciaRequestDTO();
         requestDTO1.setContaOrigem("1234567890");
         requestDTO1.setContaDestino("0987654321");
         requestDTO1.setValor(new BigDecimal("100.00"));
         requestDTO1.setDataTransferencia(hoje.plusDays(5));
-        
+
         mockMvc.perform(post("/agendamentos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO1)))
                 .andExpect(status().isOk());
-        
+
         // Create second transferencia
         TransferenciaRequestDTO requestDTO2 = new TransferenciaRequestDTO();
         requestDTO2.setContaOrigem("1111111111");
         requestDTO2.setContaDestino("2222222222");
         requestDTO2.setValor(new BigDecimal("200.00"));
         requestDTO2.setDataTransferencia(hoje.plusDays(15));
-        
+
         mockMvc.perform(post("/agendamentos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO2)))
@@ -169,11 +169,20 @@ class TransferenciaIntegrationTest {
                 .andExpect(jsonPath("$.content[1].taxa", is(16.0)));
     }
 
+    private void assertDateTimeEquals(LocalDateTime expected, LocalDateTime actual) {
+        assertEquals(expected.getYear(), actual.getYear());
+        assertEquals(expected.getMonth(), actual.getMonth());
+        assertEquals(expected.getDayOfMonth(), actual.getDayOfMonth());
+        assertEquals(expected.getHour(), actual.getHour());
+        assertEquals(expected.getMinute(), actual.getMinute());
+        assertEquals(expected.getSecond(), actual.getSecond());
+    }
+
     @Test
     void listarTransferencias_ComPaginacao_DeveRetornarPaginaCorreta() throws Exception {
         // Arrange
-        LocalDate hoje = LocalDate.now();
-        
+        LocalDateTime hoje = LocalDateTime.now();
+
         // Create 5 transferencias
         for (int i = 0; i < 5; i++) {
             TransferenciaRequestDTO requestDTO = new TransferenciaRequestDTO();
@@ -181,7 +190,7 @@ class TransferenciaIntegrationTest {
             requestDTO.setContaDestino("2000000000");
             requestDTO.setValor(new BigDecimal("100.00"));
             requestDTO.setDataTransferencia(hoje.plusDays(5)); // Taxa fixa de 12.00
-            
+
             mockMvc.perform(post("/agendamentos")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestDTO)))
@@ -197,7 +206,7 @@ class TransferenciaIntegrationTest {
                 .andExpect(jsonPath("$.totalElements", is(5)))
                 .andExpect(jsonPath("$.totalPages", is(3)))
                 .andExpect(jsonPath("$.number", is(0)));
-        
+
         // Act & Assert - Second page with 2 items
         mockMvc.perform(get("/agendamentos")
                 .param("page", "1")
@@ -207,7 +216,7 @@ class TransferenciaIntegrationTest {
                 .andExpect(jsonPath("$.totalElements", is(5)))
                 .andExpect(jsonPath("$.totalPages", is(3)))
                 .andExpect(jsonPath("$.number", is(1)));
-        
+
         // Act & Assert - Third page with 2 items (should have only 1 item)
         mockMvc.perform(get("/agendamentos")
                 .param("page", "2")

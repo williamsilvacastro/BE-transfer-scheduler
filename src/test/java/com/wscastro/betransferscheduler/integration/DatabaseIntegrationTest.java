@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ class DatabaseIntegrationTest {
     @Test
     void testDatabaseIntegration_SalvarERecuperarTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");
@@ -153,7 +153,7 @@ class DatabaseIntegrationTest {
     @Test
     void testDatabaseIntegration_PaginacaoDeTransferencias() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
 
         // Create 10 transferencias
         for (int i = 0; i < 10; i++) {
@@ -191,7 +191,7 @@ class DatabaseIntegrationTest {
     @Test
     void testDatabaseIntegration_AtualizarTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");
@@ -218,7 +218,7 @@ class DatabaseIntegrationTest {
     @Test
     void testDatabaseIntegration_DeletarTransferencia() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         Transferencia transferencia = new Transferencia();
         transferencia.setContaOrigem("1234567890");
         transferencia.setContaDestino("0987654321");
@@ -241,7 +241,7 @@ class DatabaseIntegrationTest {
     @Test
     void testDatabaseIntegration_ContarTransferencias() {
         // Arrange
-        LocalDate hoje = LocalDate.now();
+        LocalDateTime hoje = LocalDateTime.now();
         long initialCount = transferenciaRepository.count();
 
         // Create 5 transferencias

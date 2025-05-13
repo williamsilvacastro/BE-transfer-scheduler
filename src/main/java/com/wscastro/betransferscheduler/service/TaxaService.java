@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class TaxaService {
         this.taxaRepository = taxaRepository;
     }
 
-    public BigDecimal calcularTaxa(BigDecimal valor, LocalDate dataAgendamento, LocalDate dataTransferencia) {
-        long dias = ChronoUnit.DAYS.between(dataAgendamento, dataTransferencia);
+    public BigDecimal calcularTaxa(BigDecimal valor, LocalDateTime dataAgendamento, LocalDateTime dataTransferencia) {
+        long dias = ChronoUnit.DAYS.between(dataAgendamento.toLocalDate(), dataTransferencia.toLocalDate());
         validaDistanciaEntreDatas(dias);
 
         List<Taxa> taxas = taxaRepository.findByDiasMinimoLessThanEqualAndDiasMaximoGreaterThanEqual(dias, dias);

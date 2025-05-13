@@ -5,7 +5,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -32,10 +32,10 @@ public class Transferencia {
     private BigDecimal taxa;
 
     @Column(nullable = false)
-    private LocalDate dataAgendamento;
+    private LocalDateTime dataAgendamento;
 
     @Column(nullable = false)
-    private LocalDate dataTransferencia;
+    private LocalDateTime dataTransferencia;
 
     @Override
     public final boolean equals(Object o) {
